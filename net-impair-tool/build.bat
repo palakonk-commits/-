@@ -29,8 +29,8 @@ python -m PyInstaller --onefile ^
   --hidden-import=pydivert ^
   --hidden-import=pystray ^
   --hidden-import=PIL ^
-  --distpath=dist ^
-  --buildpath=build ^
+  --dist-path=dist ^
+  --build-path=build ^
   main.py
 
 if %errorlevel% neq 0 (
