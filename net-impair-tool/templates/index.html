@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Impairment Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🌐 Network Impairment Tool</h1>
+            <p class="subtitle">Simulate network lag, drop, throttle, and more</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Panel: Controls -->
+            <div class="panel control-panel">
+                <h2>Network Effects Configuration</h2>
+
+                <!-- Filter Input -->
+                <div class="form-group">
+                    <label for="filterInput">WinDivert Filter:</label>
+                    <input 
+                        type="text" 
+                        id="filterInput" 
+                        class="form-control" 
+                        placeholder="e.g., 'outbound and udp' or 'udp.DstPort == 7777'"
+                        value="outbound and udp"
+                    >
+                    <small>WinDivert filter syntax. Examples: "tcp", "udp.DstPort == 80", "outbound"</small>
+                </div>
+
+                <!-- Lag Settings -->
+                <div class="effect-card">
+                    <div class="effect-header">
+                        <input type="checkbox" id="lagCheck" class="effect-toggle">
+                        <label for="lagCheck"><strong>Lag / Delay</strong></label>
+                    </div>
+                    <div class="effect-body">
+                        <div class="slider-group">
+                            <label for="lagSlider">Delay (ms):</label>
+                            <input type="range" id="lagSlider" min="0" max="1000" value="100" step="10" class="slider">
+                            <output id="lagValue">100</output>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drop Settings -->
+                <div class="effect-card">
+                    <div class="effect-header">
+                        <input type="checkbox" id="dropCheck" class="effect-toggle">
+                        <label for="dropCheck"><strong>Drop Packets</strong></label>
+                    </div>
+                    <div class="effect-body">
+                        <div class="slider-group">
+                            <label for="dropSlider">Drop Chance (%):</label>
+                            <input type="range" id="dropSlider" min="0" max="100" value="5" step="1" class="slider">
+                            <output id="dropValue">5</output>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Throttle Settings -->
+                <div class="effect-card">
+                    <div class="effect-header">
+                        <input type="checkbox" id="throttleCheck" class="effect-toggle">
+                        <label for="throttleCheck"><strong>Throttle / Bandwidth Limit</strong></label>
+                    </div>
+                    <div class="effect-body">
+                        <div class="slider-group">
+                            <label for="throttleTimeSlider">Throttle Timeframe (ms):</label>
+                            <input type="range" id="throttleTimeSlider" min="1" max="100" value="10" step="1" class="slider">
+                            <output id="throttleTimeValue">10</output>
+                        </div>
+                        <div class="slider-group">
+                            <label for="throttleChanceSlider">Throttle Chance (%):</label>
+                            <input type="range" id="throttleChanceSlider" min="0" max="100" value="50" step="1" class="slider">
+                            <output id="throttleChanceValue">50</output>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duplicate Settings -->
+                <div class="effect-card">
+                    <div class="effect-header">
+                        <input type="checkbox" id="duplicateCheck" class="effect-toggle">
+                        <label for="duplicateCheck"><strong>Duplicate Packets</strong></label>
+                    </div>
+                    <div class="effect-body">
+                        <div class="slider-group">
+                            <label for="duplicateCountSlider">Duplicate Count:</label>
+                            <input type="range" id="duplicateCountSlider" min="1" max="10" value="1" step="1" class="slider">
+                            <output id="duplicateCountValue">1</output>
+                        </div>
+                        <div class="slider-group">
+                            <label for="duplicateChanceSlider">Duplicate Chance (%):</label>
+                            <input type="range" id="duplicateChanceSlider" min="0" max="100" value="10" step="1" class="slider">
+                            <output id="duplicateChanceValue">10</output>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Out-of-Order Settings -->
+                <div class="effect-card">
+                    <div class="effect-header">
+                        <input type="checkbox" id="oooCheck" class="effect-toggle">
+                        <label for="oooCheck"><strong>Out-of-Order Packets</strong></label>
+                    </div>
+                    <div class="effect-body">
+                        <div class="slider-group">
+                            <label for="oooChanceSlider">Out-of-Order Chance (%):</label>
+                            <input type="range" id="oooChanceSlider" min="0" max="100" value="20" step="1" class="slider">
+                            <output id="oooChanceValue">20</output>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tamper Settings -->
+                <div class="effect-card">
+                    <div class="effect-header">
+                        <input type="checkbox" id="tamperCheck" class="effect-toggle">
+                        <label for="tamperCheck"><strong>Tamper / Corrupt Data</strong></label>
+                    </div>
+                    <div class="effect-body">
+                        <div class="slider-group">
+                            <label for="tamperChanceSlider">Tamper Chance (%):</label>
+                            <input type="range" id="tamperChanceSlider" min="0" max="100" value="5" step="1" class="slider">
+                            <output id="tamperChanceValue">5</output>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">▶ Start Simulation</button>
+                    <button id="stopBtn" class="btn btn-secondary" disabled>⏹ Stop Simulation</button>
+                    <button id="deleteBtn" class="btn btn-danger">🗑 Exit & Delete</button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Stats & Status -->
+            <div class="panel status-panel">
+                <h2>Status & Statistics</h2>
+
+                <!-- Status -->
+                <div class="status-card">
+                    <h3>Status</h3>
+                    <div class="status-line">
+                        <span class="status-label">Engine:</span>
+                        <span id="engineStatus" class="status-value stopped">Stopped</span>
+                    </div>
+                    <div class="status-line">
+                        <span class="status-label">Admin Privileges:</span>
+                        <span id="adminStatus" class="status-value">Checking...</span>
+                    </div>
+                </div>
+
+                <!-- Real-time Stats -->
+                <div class="status-card">
+                    <h3>Packet Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Processed</div>
+                            <div id="statProcessed" class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Dropped</div>
+                            <div id="statDropped" class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Delayed</div>
+                            <div id="statDelayed" class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Duplicated</div>
+                            <div id="statDuplicated" class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Tampered</div>
+                            <div id="statTampered" class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Out-of-Order</div>
+                            <div id="statOOO" class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Queue Size</div>
+                            <div id="statQueueSize" class="stat-value">0</div>
+                        </div>
+                    </div>
+                    <button id="resetStatsBtn" class="btn btn-small">Reset Stats</button>
+                </div>
+
+                <!-- Current Config Display -->
+                <div class="status-card">
+                    <h3>Active Configuration</h3>
+                    <div id="configDisplay" class="config-display">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Info -->
+                <div class="info-card">
+                    <h3>ℹ️ Information</h3>
+                    <ul>
+                        <li>All effects are applied randomly based on configured chance percentages</li>
+                        <li>Lag and delay are measured in milliseconds</li>
+                        <li>Drop chance is the percentage of packets randomly discarded</li>
+                        <li>Throttle simulates bandwidth limitations</li>
+                        <li>Duplicate creates additional copies of packets</li>
+                        <li>Out-of-Order reorders packets randomly</li>
+                        <li>Tamper corrupts small portions of packet data</li>
+                        <li>Admin privileges required for packet interception</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

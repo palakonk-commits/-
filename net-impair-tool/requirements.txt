@@ -1,0 +1,6 @@
+pydivert==0.0.7
+pywebview==5.2
+Flask==3.0.0
+pystray==0.18.1
+Pillow==10.1.0
+python-dateutil==2.8.2

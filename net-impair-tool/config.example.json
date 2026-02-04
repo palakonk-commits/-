@@ -1,0 +1,79 @@
+{
+  "comment": "Network Impairment Tool Configuration Example",
+  "comment_note": "This is a reference configuration file. Not used by default - for manual setup only.",
+  
+  "basic": {
+    "filter_str": "outbound and udp",
+    "enabled": true
+  },
+  
+  "lag_config": {
+    "lag_enabled": true,
+    "lag_ms": 100,
+    "comment": "Latency added to packets in milliseconds. 0-1000ms typical range"
+  },
+  
+  "drop_config": {
+    "drop_enabled": true,
+    "drop_chance": 5.0,
+    "comment": "Percentage of packets randomly discarded. 0-100%"
+  },
+  
+  "throttle_config": {
+    "throttle_enabled": false,
+    "throttle_ms": 10,
+    "throttle_chance": 50.0,
+    "comment": "Bandwidth limiting simulation. Time interval and percentage"
+  },
+  
+  "duplicate_config": {
+    "duplicate_enabled": false,
+    "duplicate_count": 1,
+    "duplicate_chance": 10.0,
+    "comment": "Create duplicate copies of packets"
+  },
+  
+  "reorder_config": {
+    "out_of_order_enabled": false,
+    "out_of_order_chance": 20.0,
+    "ooo_queue_size": 5,
+    "comment": "Randomly reorder packets to simulate congestion"
+  },
+  
+  "tamper_config": {
+    "tamper_enabled": false,
+    "tamper_chance": 5.0,
+    "comment": "Corrupt packet payload (flip bits, recalc checksums)"
+  },
+  
+  "example_scenarios": {
+    "gaming_lag": {
+      "filter": "outbound and udp",
+      "lag": 150,
+      "drop": 2,
+      "description": "Typical gaming latency simulation"
+    },
+    "poor_wifi": {
+      "filter": "outbound",
+      "lag": 100,
+      "drop": 8,
+      "throttle": 30,
+      "duplicate": 1,
+      "ooo": 15,
+      "description": "Realistic poor WiFi conditions"
+    },
+    "congestion": {
+      "filter": "tcp",
+      "throttle": 50,
+      "ooo": 30,
+      "description": "Network congestion simulation"
+    },
+    "corruption": {
+      "filter": "udp",
+      "drop": 5,
+      "duplicate": 1,
+      "tamper": 5,
+      "description": "Data corruption and reliability test"
+    }
+  }
+}
