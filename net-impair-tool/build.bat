@@ -9,7 +9,7 @@ echo ============================================================
 echo.
 
 echo [1/3] Installing PyInstaller...
-pip install pyinstaller --quiet
+python -m pip install pyinstaller --quiet
 if %errorlevel% neq 0 (
     echo WARNING: PyInstaller installation may have issues
 )
@@ -20,7 +20,7 @@ if exist dist rmdir /s /q dist
 if exist *.spec del *.spec
 
 echo [3/3] Building executable...
-pyinstaller --onefile ^
+python -m PyInstaller --onefile ^
   --noconsole ^
   --name "NetworkImpairment" ^
   --add-data "templates;templates" ^
